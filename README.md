@@ -19,5 +19,7 @@ Included packages are:
 Build
 =====
 
-  . ./oe-init-build-env
-  bitbake homebox-image
+```
+. ./oe-init-build-env
+bitbake homebox-image
+```

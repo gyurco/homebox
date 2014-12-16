@@ -15,13 +15,9 @@ Included packages are:
 - minidlna
 - mdadm
 - lio-utils (iscsi)
-.
-.
-.
-
 
 Build
 =====
 
-. ./oe-init-build-env
-bitbake homebox-image
+  . ./oe-init-build-env
+  bitbake homebox-image

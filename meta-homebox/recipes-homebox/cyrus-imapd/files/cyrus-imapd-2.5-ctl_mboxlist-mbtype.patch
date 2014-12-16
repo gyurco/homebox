@@ -1,0 +1,27 @@
+From 314e7c0d7adb68e22110532f7e069db74701251c Mon Sep 17 00:00:00 2001
+From: Jeroen van Meeuwen (Kolab Systems) <vanmeeuwen@kolabsys.com>
+Date: Thu, 31 Jul 2014 11:20:37 +0200
+Subject: [PATCH] Do not include mailboxes with mbtype MBTYPE_DELETED in ctl_mboxlist -d output
+
+---
+ imap/ctl_mboxlist.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/imap/ctl_mboxlist.c b/imap/ctl_mboxlist.c
+index 77168a0..92d508b 100644
+--- a/imap/ctl_mboxlist.c
++++ b/imap/ctl_mboxlist.c
+@@ -320,6 +320,10 @@ static int dump_cb(void *rockp,
+ 
+     switch (d->op) {
+     case DUMP:
++	if ((mbtype & MBTYPE_DELETED) && (config_mupdate_config == IMAP_ENUM_MUPDATE_CONFIG_STANDARD) && config_getstring(IMAPOPT_PROXYSERVERS)) {
++	    break;
++	}
++
+ 	if (!d->partition || !strcmp(d->partition, part)) {
+ 	    printf("%s\t%d %s %s\n", name, mbtype, part, acl);
+ 	    if (d->purge) {
+-- 
+1.7.1
+

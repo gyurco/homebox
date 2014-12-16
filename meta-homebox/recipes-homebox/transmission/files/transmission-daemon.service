@@ -1,0 +1,13 @@
+[Unit]
+Description=Transmission BitTorrent Daemon
+After=network.target
+
+[Service]
+User=transmission
+Type=simple
+EnvironmentFile=/etc/default/transmission
+ExecStart=/usr/bin/transmission-daemon -f --log-error $TRANSMISSION_EXTRA_PARAMS
+ExecReload=/bin/kill -s HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

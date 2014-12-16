@@ -1,0 +1,12 @@
+[Unit]
+Description=Cyrus-imapd IMAP/POP3 email server
+After=local-fs.target network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/cyrus-imapd
+ExecStart=/usr/sbin/master $CYRUSOPTIONS
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

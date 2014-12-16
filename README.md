@@ -15,6 +15,15 @@ Included packages are:
 - minidlna
 - mdadm
 - lio-utils (iscsi)
+- apache
+- php
+- cyrus-imapd
+- dovecot
+- postfix
+- samba
+- nfsd
+- openvpn
+- and a lot more...
 
 Build
 =====

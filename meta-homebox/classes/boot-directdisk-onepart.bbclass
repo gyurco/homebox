@@ -20,6 +20,7 @@
 # ${ROOTFS} - the rootfs image to incorporate
 
 do_bootdirectdisk_onepart[depends] += "dosfstools-native:do_populate_sysroot \
+                               virtual/kernel:do_deploy \
                                syslinux:do_populate_sysroot \
                                syslinux-native:do_populate_sysroot \
                                parted-native:do_populate_sysroot \
@@ -69,7 +70,7 @@ boot_direct_populate() {
 	install -d $dest
 
 	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage $dest/vmlinuz
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
 
 	# initrd is made of concatenation of multiple filesystem images
 	if [ -n "${INITRD}" ]; then
@@ -84,16 +85,13 @@ boot_direct_populate() {
 		done
 		chmod 0644 $dest/initrd
 	fi
-	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
-		install -m 0644 ${ROOTFS} ${dest}/rootfs.img
-	fi
+	install -m 0644 ${ROOTFS} ${dest}/rootfs.img
 }
 
 build_boot_dd() {
 	HDDDIR="${S}/hdd/boot"
 	HDDIMG="${S}/hdd.image"
 	IMAGE=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect
-	CONFIGPARTBLOCKS=50000
 
 	boot_direct_populate $HDDDIR
 
@@ -132,18 +130,13 @@ build_boot_dd() {
 
 	TOTALSIZE=`expr $BLOCKS`
 	END1=`expr $BLOCKS \* 1024`
-#	END2=`expr $END1 + 512`
-#	END3=`expr \( $CONFIGPARTBLOCKS \* 1024 \) + $END1`
         
 	rm -rf $IMAGE
 	dd if=/dev/zero of=$IMAGE bs=1024 seek=$TOTALSIZE count=1
 
 	parted $IMAGE mklabel msdos
 	parted $IMAGE mkpart primary fat16 0 ${END1}B
-#	parted $IMAGE unit B mkpart primary ext4 ${END2}B ${END3}B
 	parted $IMAGE set 1 boot on 
-
-	parted $IMAGE print
 
 	awk "BEGIN { printf \"$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')\" }" | \
 		dd of=$IMAGE bs=1 seek=440 conv=notrunc

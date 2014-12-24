@@ -11,6 +11,9 @@ ISOLINUX=""
 ROOT_DISK=""
 OVERLAY_DISK=""
 
+#Default timeout for finding the root and config filesystems
+shelltimeout=30
+
 # Copied from initramfs-framework. The core of this script probably should be
 # turned into initramfs-framework modules to reduce duplication.
 udev_daemon() {
@@ -69,11 +72,9 @@ read_args() {
                     console_params="$console_params $arg"
                 fi ;;
             debugshell*)
-                if [ -z "$optarg" ]; then
-                        shelltimeout=30
-                else
+                if [ ! -z "$optarg" ]; then
                         shelltimeout=$optarg
-                fi 
+                fi
         esac
     done
 }
@@ -205,7 +206,11 @@ do
            mount | grep media
            echo "Available block devices"
            cat /proc/partitions
-           fatal "Cannot find $ROOT_IMAGE file in /run/media/* , dropping to a shell "
+           if [ -z "$ROOT_DISK" ]; then
+               fatal "Cannot find $ROOT_IMAGE file in /run/media/* , dropping to a shell "
+           else
+               fatal "Cannot find the config fs in /run/media/* , dropping to a shell "
+           fi
       fi
       C=$(( C + 1 ))
   fi

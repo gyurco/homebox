@@ -31,8 +31,8 @@ IMAGE_INSTALL = "\
     apache2 php-fpm php-fpm-apache2 \
     mdadm \
     rpm smartpm \
-    acpid dmidecode \
-    libav minidlna transmission transmission-client mpd \
+    acpid dmidecode usbutils \
+    libav minidlna transmission transmission-client mpd alsa-utils \
     samba \
     curl xz \
     screen \

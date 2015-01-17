@@ -40,7 +40,7 @@ IMAGE_INSTALL = "\
     tftp-hpa tftp-hpa-server \
     smartmontools hdparm sdparm \
     strace ldd lsof nmap iotop iperf tcpdump \
-    wget \
+    wget rsync \
     lmsensors-sensors lmsensors-fancontrol lmsensors-pwmconfig lmsensors-isatools lmsensors-sensorsdetect \
     net-snmp-client net-snmp-mibs net-snmp-server net-snmp-server-snmpd net-snmp-server-snmptrapd \
     systemd-analyze \

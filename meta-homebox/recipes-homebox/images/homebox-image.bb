@@ -37,6 +37,7 @@ IMAGE_INSTALL = "\
     curl xz \
     screen \
     ntp ntp-utils \
+    fuse-exfat ntfs-3g-ntfsprogs exfat-utils \
     tftp-hpa tftp-hpa-server \
     smartmontools hdparm sdparm \
     strace ldd lsof nmap iotop iperf tcpdump \

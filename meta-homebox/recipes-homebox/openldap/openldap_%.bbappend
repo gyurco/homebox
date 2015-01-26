@@ -4,7 +4,7 @@ PACKAGECONFIG ??= "gnutls modules \
 "
 
 do_configure() {
-  cp ${STAGING_DATADIR_NATIVE}/libtool/config/ltmain.sh ${S}/build
+  cp ${STAGING_DATADIR_NATIVE}/libtool/build-aux/ltmain.sh ${S}/build
   rm -f ${S}/libtool
   aclocal
   libtoolize --force --copy

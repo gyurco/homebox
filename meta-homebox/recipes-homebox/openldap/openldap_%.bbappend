@@ -10,5 +10,5 @@ do_configure() {
   libtoolize --force --copy
   gnu-configize
   autoconf
-  LIBS=-ldb oe_runconf
+  oe_runconf
 }

@@ -52,11 +52,11 @@ IMAGE_INSTALL = "\
     lio-utils \
     python-json \
     postfix dovecot cyrus-imapd \
+    openldap-bin openldap-slapd \
     packagegroup-core-boot \
     packagegroup-core-full-cmdline \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
-#    openldap openldap-slapd openldap-bin openldap-backends 
 
 export IMAGE_BASENAME = "homebox"
 

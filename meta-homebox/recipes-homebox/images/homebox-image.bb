@@ -46,7 +46,7 @@ IMAGE_INSTALL = "\
     net-snmp-client net-snmp-mibs net-snmp-server net-snmp-server-snmpd net-snmp-server-snmptrapd \
     systemd-analyze \
     openvpn strongswan \
-    ebtables bridge-utils cifs-utils \
+    ebtables bridge-utils cifs-utils vlan inetutils \
     cryptsetup \
     cyrus-sasl-bin \
     lio-utils \

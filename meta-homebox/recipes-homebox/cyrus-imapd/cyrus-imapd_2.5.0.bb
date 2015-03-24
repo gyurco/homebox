@@ -1,13 +1,11 @@
 DESCRIPTION = "Cyrus-imapd"
 LICENSE = "CMU"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=b24dd5815bd69137c774dd6b5e5250f4"
+PR="r2"
 
-PR="r1"
-
-SRC_URI = "file://${BPN}-${PV}.tar.gz \
+SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
    file://cyrus-imapd.service \
    file://cyrus-imapd-2.5-ctl_mboxlist-mbtype.patch \
-   file://cyrus-imapd-2.5-default-twoskip.patch \
    file://cyrus-imapd.imap-2.3.x-conf \
    file://cyrus-imapd.pam-config \
    file://cyrus.conf \
@@ -15,6 +13,9 @@ SRC_URI = "file://${BPN}-${PV}.tar.gz \
 
 DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs"
 RDEPENDS_${PN} += 'perl'
+
+SRC_URI[md5sum] = "e699ab5d8b0a8255ac05b024578e9bdc"
+SRC_URI[sha256sum] = "7706bf80758debce681ae96ee9eac8be181e1066773075cf340727b306fe0543"
 
 inherit autotools-brokensep perlnative pkgconfig useradd systemd
 

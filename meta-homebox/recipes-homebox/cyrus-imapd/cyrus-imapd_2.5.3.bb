@@ -1,7 +1,7 @@
 DESCRIPTION = "Cyrus-imapd"
 LICENSE = "CMU"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b24dd5815bd69137c774dd6b5e5250f4"
-PR="r2"
+PR="r1"
 
 SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
    file://cyrus-imapd.service \
@@ -13,8 +13,8 @@ SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
 DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs"
 RDEPENDS_${PN} += 'perl'
 
-SRC_URI[md5sum] = "f400fba61d4e6eaa0995b93613946cb6"
-SRC_URI[sha256sum] = "264284a75e5a2567f01b058befc302d2e3b53d8fb7dd4d9988e8310dce305ec9"
+SRC_URI[md5sum] = "3cc62694e11b397b2e09600e5447ab57"
+SRC_URI[sha256sum] = "9ea6fcedf4a2b560cfcdffe90e65c31ba6007dee3c79425e5445988990acb3d8"
 
 inherit autotools-brokensep perlnative pkgconfig useradd systemd
 
@@ -22,12 +22,6 @@ EXTRA_OECONF="--enable-gssapi=no --enable-replication --enable-murder --enable-i
 
 
 do_configure() {
-#  cp ${STAGING_DATADIR_NATIVE}/libtool/config/ltmain.sh ${S}/build
-#  rm -f ${S}/libtool
-#  aclocal
-#  libtoolize --force --copy
-#  gnu-configize
-#  autoconf
   aclocal -I cmulocal
   libtoolize --install
   automake --add-missing || autoreconf -v && automake --add-missing

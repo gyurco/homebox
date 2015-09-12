@@ -3,9 +3,9 @@ HOMEPAGE = "http://ldb.samba.org"
 SECTION = "libs"
 LICENSE = "LGPL-3.0+ & LGPL-2.1+ & GPL-3.0+"
 
-DEPENDS += "libtdb talloc libtevent popt"
-RDEPENDS_${PN} += "libtevent popt libtalloc openldap"
-RDEPENDS_pyldb += "python libtdb libtalloc"
+DEPENDS += "attr libbsd libtdb talloc libtevent popt"
+RDEPENDS_${PN} += "libtevent (>=0.9.22) popt libtalloc (>=2.1.1) openldap"
+RDEPENDS_pyldb += "python libtdb (>=1.3.4) libtalloc (>=2.1.1)"
 
 SRC_URI = "http://samba.org/ftp/ldb/ldb-${PV}.tar.gz \
            file://do-not-import-target-module-while-cross-compile.patch \

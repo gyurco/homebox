@@ -13,8 +13,8 @@ SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
 DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs"
 RDEPENDS_${PN} += 'perl'
 
-SRC_URI[md5sum] = "faa42e1ff6b35f3f92cdc3bb821cd643"
-SRC_URI[sha256sum] = "98839d2865c0ff5c5dc0f59aba54ad111135697c3383919e037651d90f00aaaa"
+SRC_URI[md5sum] = "ba6f44b742f8b255e251bc056f4bc4a1"
+SRC_URI[sha256sum] = "60f9be717c17497e7d69f468a8da3daf926c49edeac958bc769b4547f10103df"
 
 inherit autotools-brokensep perlnative pkgconfig useradd systemd
 

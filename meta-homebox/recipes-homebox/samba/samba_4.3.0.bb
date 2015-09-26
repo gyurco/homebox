@@ -13,16 +13,17 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://00-fix-typos-in-man-pages.patch \
+           file://10-use-only-libsystemd.patch \
            file://16-do-not-check-xsltproc-manpages.patch \
            file://20-do-not-import-target-module-while-cross-compile.patch \
           "
 
-SRC_URI[md5sum] = "aeaa6ccee87727b7d01df7b6d0864c74"
-SRC_URI[sha256sum] = "b6dfa5ae4818d891ee2fcff04a5912f4a4fb2394b4f5e66a2a15b428da094c7c"
+SRC_URI[md5sum] = "8f6452eca69f8b38f97bb8d8a738180a"
+SRC_URI[sha256sum] = "d8dbb6b29dec1d9aa295655c4aa4eadd1e5367ef7047be22f4d6a18ba8acdb63"
 
 inherit systemd waf-samba
 
-DEPENDS += "readline virtual/libiconv zlib popt talloc libtdb libtevent libldb gnutls krb5"
+DEPENDS += "readline virtual/libiconv avahi libaio zlib popt talloc libtdb libtevent libldb gnutls krb5"
 RDEPENDS_${PN} += "openldap"
 
 PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
@@ -125,6 +126,9 @@ FILES_${PN}-python = "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.so \
                       ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/provision/*.py \
                       ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/samba3/*.py \
                       ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/samba3/*.so \
+                      ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/third_party/* \
+                      ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/subunit/* \
+                      ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/kcc/* \
                       ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/tests/* \
                       ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/web_server/* \
                      "

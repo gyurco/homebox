@@ -14,18 +14,6 @@ diff -Nurp samba-4.1.12.orig/lib/ldb/wscript samba-4.1.12/lib/ldb/wscript
  
          # we need this for the ldap backend
          if conf.CHECK_FUNCS_IN('ber_flush ldap_open ldap_initialize', 'lber ldap', headers='lber.h ldap.h'):
-diff -Nurp samba-4.1.12.orig/lib/ntdb/wscript samba-4.1.12/lib/ntdb/wscript
---- samba-4.1.12.orig/lib/ntdb/wscript	2013-12-05 18:16:48.000000000 +0900
-+++ samba-4.1.12/lib/ntdb/wscript	2015-04-23 17:09:17.680000274 +0900
-@@ -121,7 +121,7 @@ def configure(conf):
-             Logs.warn('Disabling pyntdb as python devel libs not found')
-             conf.env.disable_python = True
- 
--    conf.CHECK_XSLTPROC_MANPAGES()
-+    #conf.CHECK_XSLTPROC_MANPAGES()
- 
-     # This make #include <ccan/...> work.
-     conf.ADD_EXTRA_INCLUDES('''#lib''')
 diff -Nurp samba-4.1.12.orig/lib/talloc/wscript samba-4.1.12/lib/talloc/wscript
 --- samba-4.1.12.orig/lib/talloc/wscript	2013-12-05 18:16:48.000000000 +0900
 +++ samba-4.1.12/lib/talloc/wscript	2015-04-23 17:08:21.781000339 +0900

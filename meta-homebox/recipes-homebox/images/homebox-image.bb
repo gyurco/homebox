@@ -53,7 +53,7 @@ IMAGE_INSTALL = "\
     python-json \
     postfix dovecot cyrus-imapd \
     bluez5 bluez5-noinst-tools bluez5-obex \
-    openldap-bin openldap-slapd \
+    openldap-bin openldap-slapd openldap-overlay-proxycache openldap-backends openldap-dev \
     qemu libvirt libvirt-libvirtd libvirt-virsh \
     openvswitch-controller openvswitch-switch openvswitch-pki \
     packagegroup-core-boot \

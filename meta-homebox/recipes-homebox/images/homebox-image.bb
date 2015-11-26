@@ -29,6 +29,7 @@ ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz"
 
 IMAGE_INSTALL = "\
     apache2 php-fpm php-fpm-apache2 \
+    nginx \
     mdadm \
     rpm smartpm \
     acpid dmidecode usbutils \

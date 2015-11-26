@@ -57,10 +57,10 @@ USERADD_PARAM_${PN} = "--home ${localstatedir}/lib/imap --create-home \
 
 #FILES_${PN}-doc += "/usr/man"
 
-FILES_${PN}-dbg += "${libdir}/perl/5.22.0/auto/Cyrus/IMAP/.debug \
-    ${libdir}/perl/5.22.0/auto/Cyrus/SIEVE/managesieve/.debug"
-
 FILES_${PN} += "${libdir}/perl"
+
+FILES_${PN}-dbg += "${libdir}/perl/site_perl/5.22.0/auto/Cyrus/IMAP/.debug \
+    ${libdir}/perl/site_perl/5.22.0/auto/Cyrus/SIEVE/managesieve/.debug"
 
 CONFFILES_${PN} = "\
   ${sysconfdir}/imapd.conf \

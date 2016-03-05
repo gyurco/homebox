@@ -14,10 +14,9 @@ SYSLINUX_ROOT = "root=/dev/ram0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
 
-do_bootimg[depends] += "${INITRD_IMAGE}:do_rootfs"
-do_bootimg[depends] += "${PN}:do_rootfs"
-do_bootdirectdisk_onepart[depends] += "${INITRD_IMAGE}:do_rootfs"
-do_bootdirectdisk_onepart[depends] += "${PN}:do_rootfs"
+#do_bootimg[depends] = "${INITRD_IMAGE}:do_image_complete"
+do_bootimg[depends] = "${PN}:do_image_squashfs_xz"
+do_bootdirectdisk_onepart[depends] += "${PN}:do_image_squashfs_xz"
 
 inherit boot-directdisk-onepart
 #If no need for a partitioned diskimage:
@@ -25,6 +24,7 @@ inherit boot-directdisk-onepart
 
 IMAGE_FSTYPES = "squashfs-xz"
 IMAGE_TYPEDEP_live = "squashfs-xz"
+
 ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz"
 
 IMAGE_INSTALL = "\
@@ -33,7 +33,7 @@ IMAGE_INSTALL = "\
     mdadm \
     rpm smartpm \
     acpid dmidecode usbutils \
-    libav minidlna transmission transmission-client mpd alsa-utils \
+    ffmpeg minidlna transmission transmission-client mpd alsa-utils \
     samba \
     curl xz \
     screen \
@@ -52,11 +52,13 @@ IMAGE_INSTALL = "\
     cyrus-sasl-bin \
     lio-utils \
     python-json \
-    postfix dovecot cyrus-imapd \
+    postfix cyrus-imapd \
     bluez5 bluez5-noinst-tools bluez5-obex \
-    openldap-bin openldap-slapd openldap-overlay-proxycache openldap-backends openldap-dev \
+    openldap-bin openldap-slapd openldap-overlay-proxycache openldap-dev \
+    openldap-backend-dnssrv openldap-backend-ldap openldap-backend-mdb openldap-backend-meta \
+    openldap-backend-monitor openldap-backend-null openldap-backend-passwd \
     qemu libvirt libvirt-libvirtd libvirt-virsh \
-    openvswitch-controller openvswitch-switch openvswitch-pki \
+    openvswitch-switch openvswitch-pki \
     packagegroup-core-boot \
     packagegroup-core-full-cmdline \
     ${CORE_IMAGE_EXTRA_INSTALL} \

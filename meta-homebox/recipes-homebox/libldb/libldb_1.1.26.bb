@@ -3,20 +3,19 @@ HOMEPAGE = "http://ldb.samba.org"
 SECTION = "libs"
 LICENSE = "LGPL-3.0+ & LGPL-2.1+ & GPL-3.0+"
 
-DEPENDS += "attr libbsd libtdb talloc libtevent popt"
+DEPENDS += "attr libbsd libtdb libtalloc libtevent popt"
 RDEPENDS_${PN} += "libtevent (>=0.9.22) popt libtalloc (>=2.1.1) openldap"
 RDEPENDS_pyldb += "python libtdb (>=1.3.4) libtalloc (>=2.1.1)"
 
 SRC_URI = "http://samba.org/ftp/ldb/ldb-${PV}.tar.gz \
-           file://do-not-import-target-module-while-cross-compile.patch \
           "
 
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/LGPL-3.0;md5=bfccfe952269fff2b407dd11f2f3083b \
                     file://${COREBASE}/meta/files/common-licenses/LGPL-2.1;md5=1a6d268fd218675ffea8be556788b780 \
                     file://${COREBASE}/meta/files/common-licenses/GPL-3.0;md5=c79ff39f19dfec6d293b95dea7b07891"
 
-SRC_URI[md5sum] = "94ba09c7452fff68df3481686c56677e"
-SRC_URI[sha256sum] = "267bbb7f278068eaf0de27adffda2e691a070a93c5c15ee27c828e87b4c7dbf1"
+SRC_URI[md5sum] = "31780b702b638ad32aa5d9853d257839"
+SRC_URI[sha256sum] = "8843c7a72b980d9413ba6c494c039bccd10c524b37fda2917afb147745d8b2e6"
 
 inherit waf-samba
 

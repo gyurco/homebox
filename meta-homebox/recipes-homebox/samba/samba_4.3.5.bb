@@ -12,19 +12,21 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 "
 
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
+           file://0006-avoid-using-colon-in-the-checking-msg.patch \
            file://00-fix-typos-in-man-pages.patch \
            file://10-use-only-libsystemd.patch \
            file://16-do-not-check-xsltproc-manpages.patch \
            file://20-do-not-import-target-module-while-cross-compile.patch \
           "
 
-SRC_URI[md5sum] = "e63a481cad0603db1a9239d7606cbc9a"
-SRC_URI[sha256sum] = "9908a80d95b9e2583906ed4347a8c80b769539a2788158992fb48ea9fb4d2c82"
+SRC_URI[md5sum] = "3f904dbc89076212626d7e1601b0ba02"
+SRC_URI[sha256sum] = "583f927a823b272757fd4df0be267bd20a223b06cfc3c662df17e4870f14bf1c"
 
 inherit systemd waf-samba
 
-DEPENDS += "readline virtual/libiconv avahi libaio zlib popt talloc libtdb libtevent libldb gnutls krb5"
+DEPENDS += "readline virtual/libiconv avahi libaio zlib popt libtalloc libtdb libtevent libldb gnutls krb5"
 RDEPENDS_${PN} += "openldap"
+RDEPENDS_${PN}-python += "pyldb"
 
 PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG += "${@base_contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"

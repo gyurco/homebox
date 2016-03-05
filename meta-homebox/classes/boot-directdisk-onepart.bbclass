@@ -58,9 +58,10 @@ inherit ${EFI_CLASS}
 
 # Get the build_syslinux_cfg() function from the syslinux class
 
-AUTO_SYSLINUXCFG = "1"
+AUTO_SYSLINUX_CFG = "1"
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
+SYSLINUX_CFG  ?= "${S}/syslinux.cfg"
 SYSLINUX_TIMEOUT ?= "10"
 
 IS_VMDK = '${@bb.utils.contains("IMAGE_FSTYPES", "vmdk", "true", "false", d)}'
@@ -73,9 +74,9 @@ boot_direct_populate() {
 	install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
 
 	# initrd is made of concatenation of multiple filesystem images
-	if [ -n "${INITRD}" ]; then
+	if [ -n "${INITRD_LIVE}" ]; then
 		rm -f $dest/initrd
-		for fs in ${INITRD}
+		for fs in ${INITRD_LIVE}
 		do
 			if [ -s "${fs}" ]; then
 				cat ${fs} >> $dest/initrd
@@ -181,4 +182,4 @@ def validate_disk_signature(d):
 
 DISK_SIGNATURE_GENERATED := "${@generate_disk_signature()}"
 
-addtask bootdirectdisk_onepart before do_build
+addtask bootdirectdisk_onepart before do_image_complete

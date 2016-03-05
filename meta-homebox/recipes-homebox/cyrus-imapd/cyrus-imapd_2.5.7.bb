@@ -13,10 +13,10 @@ SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
 DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs"
 RDEPENDS_${PN} += 'perl'
 
-SRC_URI[md5sum] = "ba6f44b742f8b255e251bc056f4bc4a1"
-SRC_URI[sha256sum] = "60f9be717c17497e7d69f468a8da3daf926c49edeac958bc769b4547f10103df"
+SRC_URI[md5sum] = "1b60d52348578143a4467a2beca07c4e"
+SRC_URI[sha256sum] = "f06c2c030b16b70145fecdf7edaa0f2ef6bf690b0d8fd6e2c62d95af303d68da"
 
-inherit autotools-brokensep perlnative pkgconfig useradd systemd
+inherit autotools-brokensep pkgconfig cpan useradd systemd
 
 EXTRA_OECONF="--enable-gssapi=no --enable-replication --enable-murder --enable-idled --with-cyrus-prefix=${sbindir} --with-service-path=${sbindir}"
 
@@ -29,12 +29,12 @@ do_configure() {
 }
 
 do_install_append() {
-    mv ${D}/usr/man ${D}${mandir}
+#    mv ${D}/usr/man ${D}${mandir}
     install -d ${D}${nonarch_base_libdir}/systemd/system
     install -m 0644 ${WORKDIR}/cyrus-imapd.service ${D}${nonarch_base_libdir}/systemd/system
 
-    mv ${D}${libdir}/perl-native/perl ${D}${libdir}
-    rm -rf ${D}${libdir}/perl-native
+#    mv ${D}${libdir}/perl-native/perl ${D}${libdir}
+#    rm -rf ${D}${libdir}/perl-native
 
     install -d ${D}${sysconfdir}/default
     echo 'CYRUSOPTIONS=""' > ${D}${sysconfdir}/default/cyrus-imapd
@@ -43,6 +43,10 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/cyrus.conf ${D}${sysconfdir}/cyrus.conf
     install -d ${D}${sysconfdir}/pam.d
     install -m 0644 ${WORKDIR}/cyrus-imapd.pam-config ${D}${sysconfdir}/pam.d/imap
+}
+
+do_install() {
+    oe_runmake 'DESTDIR=${D}' install
 }
 
 SYSTEMD_SERVICE_${PN} = "cyrus-imapd.service"

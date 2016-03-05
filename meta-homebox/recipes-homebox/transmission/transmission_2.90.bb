@@ -1,6 +1,6 @@
 DESCRIPTION = "Transmission"
 LICENSE = "GPLv2 & GPLv3"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a1923fe8f8ff37c33665716af0ec84f1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0dd9fcdc1416ff123c41c785192a1895"
 
 PR="r1"
 
@@ -9,14 +9,14 @@ SRC_URI = "https://transmission.cachefly.net/${BPN}-${PV}.tar.xz \
 
 DEPENDS = "libevent openssl curl libtool intltool-native"
 
-SRC_URI[md5sum] = "411aec1c418c14f6765710d89743ae42"
-SRC_URI[sha256sum] = "a9fc1936b4ee414acc732ada04e84339d6755cd0d097bcbd11ba2cfc540db9eb"
+SRC_URI[md5sum] = "0792c67fcbf722f7823e964e09eb16bc"
+SRC_URI[sha256sum] = "69ff8caf81684155926f437f46bf7df1b1fb304f52c7809f546257e8923f2fd2"
 
 inherit autotools-brokensep gettext useradd systemd
 
-PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'x11', 'gtk', '', d)}"
+#PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'x11', 'gtk', '', d)}"
 
-PACKAGECONFIG[gtk] = " --with-gtk,--without-gtk,gtk+,"
+#PACKAGECONFIG[gtk] = " --with-gtk,--without-gtk,gtk+3,"
 
 # Configure aborts with:
 # config.status: error: po/Makefile.in.in was not created by intltoolize.

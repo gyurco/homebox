@@ -19,8 +19,8 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://20-do-not-import-target-module-while-cross-compile.patch \
           "
 
-SRC_URI[md5sum] = "3f904dbc89076212626d7e1601b0ba02"
-SRC_URI[sha256sum] = "583f927a823b272757fd4df0be267bd20a223b06cfc3c662df17e4870f14bf1c"
+SRC_URI[md5sum] = "91e5b71b3ae7709246c67c46efa50e7b"
+SRC_URI[sha256sum] = "3251eca5b196854e79978f4a92d5fd2b55bd7b0a252a65131a9be02be6754924"
 
 inherit systemd waf-samba
 

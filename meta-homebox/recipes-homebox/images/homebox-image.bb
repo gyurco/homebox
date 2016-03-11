@@ -14,9 +14,9 @@ SYSLINUX_ROOT = "root=/dev/ram0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
 
-#do_bootimg[depends] = "${INITRD_IMAGE}:do_image_complete"
 do_bootimg[depends] = "${PN}:do_image_squashfs_xz"
 do_bootdirectdisk_onepart[depends] += "${PN}:do_image_squashfs_xz"
+do_bootdirectdisk_onepart[depends] += "${MLPREFIX}grub-efi:do_deploy"
 
 inherit boot-directdisk-onepart
 #If no need for a partitioned diskimage:
@@ -28,6 +28,7 @@ IMAGE_TYPEDEP_live = "squashfs-xz"
 ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz"
 
 IMAGE_INSTALL = "\
+    grub-efi \
     apache2 php-fpm php-fpm-apache2 \
     nginx \
     mdadm \

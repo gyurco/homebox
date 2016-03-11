@@ -9,8 +9,8 @@ SRC_URI = "https://transmission.cachefly.net/${BPN}-${PV}.tar.xz \
 
 DEPENDS = "libevent openssl curl libtool intltool-native"
 
-SRC_URI[md5sum] = "0792c67fcbf722f7823e964e09eb16bc"
-SRC_URI[sha256sum] = "69ff8caf81684155926f437f46bf7df1b1fb304f52c7809f546257e8923f2fd2"
+SRC_URI[md5sum] = "3fce404a436e3cd7fde80fb6ed61c264"
+SRC_URI[sha256sum] = "3a8d045c306ad9acb7bf81126939b9594553a388482efa0ec1bfb67b22acd35f"
 
 inherit autotools-brokensep gettext useradd systemd
 

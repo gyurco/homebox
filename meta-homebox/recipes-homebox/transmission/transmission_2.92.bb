@@ -22,9 +22,7 @@ inherit autotools-brokensep gettext useradd systemd
 # config.status: error: po/Makefile.in.in was not created by intltoolize.
 do_configure_prepend() {
     sed -i /AM_GLIB_GNU_GETTEXT/d ${S}/configure.ac
-    pushd ${S}
-    intltoolize --copy --force --automake
-    popd
+    cd ${S} && intltoolize --copy --force --automake
 }
 
 do_install_append() {

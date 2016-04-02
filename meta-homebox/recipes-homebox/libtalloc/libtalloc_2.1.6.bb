@@ -9,8 +9,8 @@ SRC_URI = "http://samba.org/ftp/talloc/talloc-${PV}.tar.gz"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/LGPL-3.0;md5=bfccfe952269fff2b407dd11f2f3083b \
                     file://${COREBASE}/meta/files/common-licenses/GPL-3.0;md5=c79ff39f19dfec6d293b95dea7b07891"
 
-SRC_URI[md5sum] = "f497cb42b3d9622b721b72146f1fa3be"
-SRC_URI[sha256sum] = "3833e750cf0b8c3439186cba38800cba9e26adfbce10ee98ba709c24eb1cdddd"
+SRC_URI[md5sum] = "707010c6ede5821fd34397f5d9ec6ab8"
+SRC_URI[sha256sum] = "3b8e1a50bacb359d99942e0dd9941cef779ae4b5eb20f138873bd8270cb1d47b"
 
 inherit waf-samba
 

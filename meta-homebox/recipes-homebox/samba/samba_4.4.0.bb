@@ -16,13 +16,14 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://00-fix-typos-in-man-pages.patch \
            file://10-use-only-libsystemd.patch \
            file://16-do-not-check-xsltproc-manpages.patch \
-           file://20-do-not-import-target-module-while-cross-compile.patch \
           "
 
-SRC_URI[md5sum] = "91e5b71b3ae7709246c67c46efa50e7b"
-SRC_URI[sha256sum] = "3251eca5b196854e79978f4a92d5fd2b55bd7b0a252a65131a9be02be6754924"
+SRC_URI[md5sum] = "e42b884d0e07528c8571641a4df40666"
+SRC_URI[sha256sum] = "c5f6fefb7fd0a4e5f404a253b19b55f74f88faa1c3612cb3329e24aa03470075"
 
-inherit systemd waf-samba
+inherit systemd waf-samba cpan-base perlnative
+# remove default added RDEPENDS on perl
+RDEPENDS_${PN}_remove = "perl"
 
 DEPENDS += "readline virtual/libiconv avahi libaio zlib popt libtalloc libtdb libtevent libldb gnutls krb5"
 RDEPENDS_${PN} += "openldap"
@@ -41,8 +42,6 @@ SAMBA4_AUTH_MODULES="auth_unix,auth_wbc,auth_server,auth_netlogond,auth_script,a
 SAMBA4_MODULES="${SAMBA4_IDMAP_MODULES},${SAMBA4_PDB_MODULES},${SAMBA4_AUTH_MODULES}"
 
 SAMBA4_LIBS="heimdal,!zlib,!popt,!talloc,!pytalloc,!pytalloc-util,!tevent,!pytevent,!tdb,!pytdb,!ldb,!pyldb"
-
-PERL_VERNDORLIB="${datadir}/perl5/vendor_perl/"
 
 EXTRA_OECONF += "--enable-fhs \
                  --with-piddir=${localstatedir}/run \
@@ -140,4 +139,5 @@ FILES_${PN}-python-dbg = "${libdir}/python${PYTHON_BASEVERSION}/site-packages/.d
                           ${libdir}/python${PYTHON_BASEVERSION}/site-packages/samba/dcerpc/.debug/* \
                          "
 
-FILES_${PN}-pidl = "${datadir}/perl5/vendor_perl/*"
+RDEPENDS_${PN}-pidl_append = " perl"
+FILES_${PN}-pidl = "${bindir}/pidl ${datadir}/perl5/*"

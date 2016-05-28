@@ -1,11 +1,11 @@
-# boot-directdisk-onepart.bbclass
-# (loosly based off bootimg.bbclass Copyright (C) 2004, Advanced Micro Devices, Inc.)
+# image-vm.bbclass
+# (loosly based off image-live.bbclass Copyright (C) 2004, Advanced Micro Devices, Inc.)
 #
 # Create an image which can be placed directly onto a harddisk using dd and then
 # booted.
 #
-# This uses syslinux. extlinux would have been nice but required the ext2/3 
-# partition to be mounted. grub requires to run itself as part of the install 
+# This uses syslinux. extlinux would have been nice but required the ext2/3
+# partition to be mounted. grub requires to run itself as part of the install
 # process.
 #
 # The end result is a 512 boot sector populated with an MBR and partition table
@@ -15,146 +15,108 @@
 # We have to push the msdos parition table size > 16MB so fat 16 is used as parted
 # won't touch fat12 partitions.
 
-# External variables needed
-
-# ${ROOTFS} - the rootfs image to incorporate
+inherit live-vm-common
 
 do_bootdirectdisk_onepart[depends] += "dosfstools-native:do_populate_sysroot \
                                virtual/kernel:do_deploy \
                                syslinux:do_populate_sysroot \
                                syslinux-native:do_populate_sysroot \
                                parted-native:do_populate_sysroot \
-                               mtools-native:do_populate_sysroot "
+                               mtools-native:do_populate_sysroot \
+                               "
 
-PACKAGES = " "
-EXCLUDE_FROM_WORLD = "1"
+IMAGE_TYPEDEP_vmdk = "${VM_ROOTFS_TYPE}"
+IMAGE_TYPEDEP_vdi = "${VM_ROOTFS_TYPE}"
+IMAGE_TYPEDEP_qcow2 = "${VM_ROOTFS_TYPE}"
+IMAGE_TYPEDEP_hdddirect = "${VM_ROOTFS_TYPE}"
+IMAGE_TYPES_MASKED += "vmdk vdi qcow2 hdddirect"
+
+VM_ROOTFS_TYPE ?= "ext4"
+ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${VM_ROOTFS_TYPE}"
+
+# Used by bootloader
+LABELS_VM ?= "boot"
+ROOT_VM ?= "root=/dev/sda2"
+# Using an initramfs is optional. Enable it by setting INITRD_IMAGE_VM.
+INITRD_IMAGE_VM ?= ""
+INITRD_VM ?= "${@'${DEPLOY_DIR_IMAGE}/${INITRD_IMAGE_VM}-${MACHINE}.cpio.gz' if '${INITRD_IMAGE_VM}' else ''}"
+do_bootdirectdisk_onepart[depends] += "${@'${INITRD_IMAGE_VM}:do_image_complete' if '${INITRD_IMAGE_VM}' else ''}"
 
 BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
 
-EFI = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
-EFI_PROVIDER ?= "grub-efi"
-EFI_CLASS = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
-
-# Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
-# contain "efi". This way legacy is supported by default if neither is
-# specified, maintaining the original behavior.
-def pcbios(d):
-    pcbios = bb.utils.contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
-    if pcbios == "0":
-        pcbios = bb.utils.contains("MACHINE_FEATURES", "efi", "0", "1", d)
-    return pcbios
-
-def pcbios_class(d):
-    if d.getVar("PCBIOS", True) == "1":
-        return "syslinux"
-    return ""
-
-PCBIOS = "${@pcbios(d)}"
-PCBIOS_CLASS = "${@pcbios_class(d)}"
-
-inherit ${PCBIOS_CLASS}
-inherit ${EFI_CLASS}
-
-# Get the build_syslinux_cfg() function from the syslinux class
-
-AUTO_SYSLINUX_CFG = "1"
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
-SYSLINUX_ROOT ?= "root=/dev/sda2"
-SYSLINUX_CFG  ?= "${S}/syslinux.cfg"
-SYSLINUX_TIMEOUT ?= "10"
-
-IS_VMDK = '${@bb.utils.contains("IMAGE_FSTYPES", "vmdk", "true", "false", d)}'
-
-boot_direct_populate() {
-	dest=$1
-	install -d $dest
-
-	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
-
-	# initrd is made of concatenation of multiple filesystem images
-	if [ -n "${INITRD_LIVE}" ]; then
-		rm -f $dest/initrd
-		for fs in ${INITRD_LIVE}
-		do
-			if [ -s "${fs}" ]; then
-				cat ${fs} >> $dest/initrd
-			else
-				bbfatal "${fs} is invalid. initrd image creation failed."
-			fi
-		done
-		chmod 0644 $dest/initrd
-	fi
-	install -m 0644 ${ROOTFS} ${dest}/rootfs.img
-}
+DISK_SIGNATURE[vardepsexclude] = "DISK_SIGNATURE_GENERATED"
 
 build_boot_dd() {
-	HDDDIR="${S}/hdd/boot"
-	HDDIMG="${S}/hdd.image"
-	IMAGE=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect
+        HDDDIR="${S}/hdd/boot"
+        HDDIMG="${S}/hdd.image"
+        IMAGE=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect
 
-	boot_direct_populate $HDDDIR
+        populate_kernel $HDDDIR
 
-	if [ "${PCBIOS}" = "1" ]; then
-		syslinux_hddimg_populate $HDDDIR
-	fi
-	if [ "${EFI}" = "1" ]; then
-		efi_hddimg_populate $HDDDIR
-	fi
+        if [ "${PCBIOS}" = "1" ]; then
+                syslinux_hddimg_populate $HDDDIR
+        fi
+        if [ "${EFI}" = "1" ]; then
+                efi_hddimg_populate $HDDDIR
+        fi
 
-	if [ "${IS_VMDK}" = "true" ]; then
-		if [ "x${AUTO_SYSLINUXMENU}" = "x1" ] ; then
-			install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 $HDDDIR/${SYSLINUXDIR}/
-			if [ "x${SYSLINUX_SPLASH}" != "x" ] ; then
-				install -m 0644 ${SYSLINUX_SPLASH} $HDDDIR/${SYSLINUXDIR}/splash.lss
-			fi
-		fi
-	fi
+        BLOCKS=`du -bks $HDDDIR | cut -f 1`
+        BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
 
-	BLOCKS=`du -bks $HDDDIR | cut -f 1`
-	BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
+        # Ensure total sectors is an integral number of sectors per
+        # track or mcopy will complain. Sectors are 512 bytes, and we
+        # generate images with 32 sectors per track. This calculation is
+        # done in blocks, thus the mod by 16 instead of 32.
+        BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
 
-	# Ensure total sectors is an integral number of sectors per
-	# track or mcopy will complain. Sectors are 512 bytes, and we
-	# generate images with 32 sectors per track. This calculation is
-	# done in blocks, thus the mod by 16 instead of 32.
-	BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
+        # Remove it since mkdosfs would fail when it exists
+        rm -f $HDDIMG
+        mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C $HDDIMG $BLOCKS 
+        mcopy -i $HDDIMG -s $HDDDIR/* ::/
 
-	mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C $HDDIMG $BLOCKS
-	mcopy -i $HDDIMG -s $HDDDIR/* ::/
+        if [ "${PCBIOS}" = "1" ]; then
+                syslinux_hdddirect_install $HDDIMG
+        fi
+        chmod 644 $HDDIMG
 
-	if [ "${PCBIOS}" = "1" ]; then
-		syslinux_hdddirect_install $HDDIMG
-	fi	
-	chmod 644 $HDDIMG
+        ROOTFSBLOCKS=`du -Lbks ${ROOTFS} | cut -f 1`
+        TOTALSIZE=`expr $BLOCKS + $ROOTFSBLOCKS`
+        END1=`expr $BLOCKS \* 1024`
+        END2=`expr $END1 + 512`
+        END3=`expr \( $ROOTFSBLOCKS \* 1024 \) + $END1`
 
-	TOTALSIZE=`expr $BLOCKS`
-	END1=`expr $BLOCKS \* 1024`
-        
-	rm -rf $IMAGE
-	dd if=/dev/zero of=$IMAGE bs=1024 seek=$TOTALSIZE count=1
+        echo $ROOTFSBLOCKS $TOTALSIZE $END1 $END2 $END3
+        rm -rf $IMAGE
+        dd if=/dev/zero of=$IMAGE bs=1024 seek=$TOTALSIZE count=1
 
-	parted $IMAGE mklabel msdos
-	parted $IMAGE mkpart primary fat16 0 ${END1}B
-	parted $IMAGE set 1 boot on 
+        parted $IMAGE mklabel msdos
+        parted $IMAGE mkpart primary fat16 0 ${END1}B
+        parted $IMAGE unit B mkpart primary ext2 ${END2}B ${END3}B
+        parted $IMAGE set 1 boot on 
 
-	awk "BEGIN { printf \"$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')\" }" | \
-		dd of=$IMAGE bs=1 seek=440 conv=notrunc
+        parted $IMAGE print
 
-	if [ "${PCBIOS}" = "1" ]; then
-		dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
-	fi
+        awk "BEGIN { printf \"$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')\" }" | \
+                dd of=$IMAGE bs=1 seek=440 conv=notrunc
 
-	dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
+        OFFSET=`expr $END2 / 512`
+        if [ "${PCBIOS}" = "1" ]; then
+                dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
+        fi
 
-	cd ${DEPLOY_DIR_IMAGE}
-	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
-	ln -s ${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
+        dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
+        dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
+
+        cd ${DEPLOY_DIR_IMAGE}
+        rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
+        ln -s ${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
 }
 
 python do_bootdirectdisk_onepart() {
     validate_disk_signature(d)
+    set_live_vm_vars(d, 'VM')
     if d.getVar("PCBIOS", True) == "1":
         bb.build.exec_func('build_syslinux_cfg', d)
     if d.getVar("EFI", True) == "1":
@@ -182,4 +144,32 @@ def validate_disk_signature(d):
 
 DISK_SIGNATURE_GENERATED := "${@generate_disk_signature()}"
 
-addtask bootdirectdisk_onepart before do_image_complete
+run_qemu_img (){
+    type="$1"
+    qemu-img convert -O $type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.$type
+    ln -sf ${IMAGE_NAME}.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
+}
+create_vmdk_image () {
+    run_qemu_img vmdk
+}
+
+create_vdi_image () {
+    run_qemu_img vdi
+}
+
+create_qcow2_image () {
+    run_qemu_img qcow2
+}
+
+python do_vmimg() {
+    if 'vmdk' in d.getVar('IMAGE_FSTYPES', True):
+        bb.build.exec_func('create_vmdk_image', d)
+    if 'vdi' in d.getVar('IMAGE_FSTYPES', True):
+        bb.build.exec_func('create_vdi_image', d)
+    if 'qcow2' in d.getVar('IMAGE_FSTYPES', True):
+        bb.build.exec_func('create_qcow2_image', d)
+}
+
+addtask bootdirectdisk_onepart before do_vmimg
+addtask vmimg after do_bootdirectdisk_onepart before do_image_complete
+do_vmimg[depends] += "qemu-native:do_populate_sysroot"

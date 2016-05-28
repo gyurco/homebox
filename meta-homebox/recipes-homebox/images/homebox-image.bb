@@ -8,8 +8,7 @@ KERNEL_FEATURES += "features/nfsd/nfsd-enable.scc"
 KERNEL_FEATURES += "features/grsec/grsec.scc"
 
 AUTO_SYSLINUXCFG = "1"
-INITRD_IMAGE ?= "core-image-minimal-initramfs"
-INITRD ?= "${DEPLOY_DIR_IMAGE}/${INITRD_IMAGE}-${MACHINE}.cpio.gz"
+INITRD_IMAGE_VM ?= "core-image-minimal-initramfs"
 SYSLINUX_ROOT = "root=/dev/ram0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
@@ -23,13 +22,14 @@ inherit boot-directdisk-onepart
 #inherit bootimg
 
 IMAGE_FSTYPES = "squashfs-xz"
-IMAGE_TYPEDEP_live = "squashfs-xz"
+IMAGE_TYPEDEP_vm = "squashfs_xz"
+VM_ROOTFS_TYPE = "squashfs_xz"
 
 ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz"
 
 IMAGE_INSTALL = "\
     grub-efi \
-    apache2 php-fpm php-fpm-apache2 \
+    apache2 php-cli php-fpm php-fpm-apache2 \
     nginx \
     mdadm \
     rpm smartpm \

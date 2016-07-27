@@ -30,6 +30,7 @@ ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz"
 IMAGE_INSTALL = "\
     grub-efi \
     apache2 php-cli php-fpm php-fpm-apache2 \
+    squid \
     nginx \
     mdadm \
     rpm smartpm \
@@ -42,7 +43,8 @@ IMAGE_INSTALL = "\
     fuse-exfat ntfs-3g-ntfsprogs exfat-utils \
     tftp-hpa tftp-hpa-server \
     smartmontools hdparm sdparm \
-    strace ldd lsof nmap iotop iperf tcpdump \
+    strace ldd lsof nmap iotop iperf3 tcpdump \
+    paxctl gradm \
     wget rsync \
     lmsensors-sensors lmsensors-fancontrol lmsensors-pwmconfig lmsensors-isatools lmsensors-sensorsdetect \
     net-snmp-client net-snmp-mibs net-snmp-server net-snmp-server-snmpd net-snmp-server-snmptrapd \

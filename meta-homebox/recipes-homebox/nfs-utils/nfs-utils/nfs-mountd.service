@@ -1,0 +1,11 @@
+[Unit]
+Description=NFS Mount Daemon
+After=rpcbind.service proc-fs-nfsd.mount
+Requires=rpcbind.service proc-fs-nfsd.mount
+
+[Service]
+EnvironmentFile=-@SYSCONFDIR@/nfs-utils.conf
+ExecStart=@SBINDIR@/rpc.mountd -F $MOUNTD_OPTS
+
+[Install]
+WantedBy=multi-user.target

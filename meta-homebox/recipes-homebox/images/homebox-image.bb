@@ -58,7 +58,7 @@ IMAGE_INSTALL = "\
     postfix cyrus-imapd \
     bluez5 bluez5-noinst-tools bluez5-obex \
     openldap-bin openldap-slapd openldap-overlay-proxycache openldap-dev \
-    openldap-backend-dnssrv openldap-backend-ldap openldap-backend-mdb openldap-backend-meta \
+    openldap-backend-dnssrv openldap-backend-ldap openldap-backend-meta \
     openldap-backend-monitor openldap-backend-null openldap-backend-passwd \
     qemu libvirt libvirt-libvirtd libvirt-virsh \
     openvswitch-switch openvswitch-pki \

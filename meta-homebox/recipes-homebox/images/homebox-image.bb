@@ -33,7 +33,7 @@ IMAGE_INSTALL = "\
     squid \
     nginx \
     mdadm \
-    rpm smartpm \
+    rpm \
     acpid dmidecode usbutils \
     ffmpeg minidlna transmission transmission-client mpd alsa-utils \
     samba \
@@ -62,6 +62,7 @@ IMAGE_INSTALL = "\
     openldap-backend-monitor openldap-backend-null openldap-backend-passwd \
     qemu libvirt libvirt-libvirtd libvirt-virsh \
     openvswitch-switch openvswitch-pki \
+    kernel-modules \
     packagegroup-core-boot \
     packagegroup-core-full-cmdline \
     ${CORE_IMAGE_EXTRA_INSTALL} \

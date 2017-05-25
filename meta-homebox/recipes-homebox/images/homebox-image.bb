@@ -19,13 +19,13 @@ do_bootdirectdisk_onepart[depends] += "${MLPREFIX}grub-efi:do_deploy"
 
 inherit boot-directdisk-onepart
 #If no need for a partitioned diskimage:
-#inherit bootimg
+#inherit image-vm
 
 IMAGE_FSTYPES = "squashfs-xz"
 IMAGE_TYPEDEP_vm = "squashfs_xz"
 VM_ROOTFS_TYPE = "squashfs_xz"
 
-ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz"
+ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.squashfs-xz"
 
 IMAGE_INSTALL = "\
     grub-efi \

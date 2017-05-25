@@ -23,6 +23,7 @@ do_bootdirectdisk_onepart[depends] += "dosfstools-native:do_populate_sysroot \
                                syslinux-native:do_populate_sysroot \
                                parted-native:do_populate_sysroot \
                                mtools-native:do_populate_sysroot \
+                               ${PN}:do_image_${VM_ROOTFS_TYPE} \
                                "
 
 IMAGE_TYPEDEP_vmdk = "${VM_ROOTFS_TYPE}"
@@ -32,7 +33,7 @@ IMAGE_TYPEDEP_hdddirect = "${VM_ROOTFS_TYPE}"
 IMAGE_TYPES_MASKED += "vmdk vdi qcow2 hdddirect"
 
 VM_ROOTFS_TYPE ?= "ext4"
-ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${VM_ROOTFS_TYPE}"
+ROOTFS ?= "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${VM_ROOTFS_TYPE}"
 
 # Used by bootloader
 LABELS_VM ?= "boot"

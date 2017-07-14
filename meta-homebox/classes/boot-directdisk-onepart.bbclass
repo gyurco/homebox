@@ -18,13 +18,16 @@
 inherit live-vm-common
 
 do_bootdirectdisk_onepart[depends] += "dosfstools-native:do_populate_sysroot \
-                               virtual/kernel:do_deploy \
-                               syslinux:do_populate_sysroot \
-                               syslinux-native:do_populate_sysroot \
-                               parted-native:do_populate_sysroot \
-                               mtools-native:do_populate_sysroot \
-                               ${PN}:do_image_${VM_ROOTFS_TYPE} \
-                               "
+                        mtools-native:do_populate_sysroot \
+                        cdrtools-native:do_populate_sysroot \
+                        parted-native:do_populate_sysroot \
+                        virtual/kernel:do_deploy \
+                        ${MLPREFIX}syslinux:do_populate_sysroot \
+                        syslinux-native:do_populate_sysroot \
+                        ${@oe.utils.ifelse(d.getVar('COMPRESSISO', False),'zisofs-tools-native:do_populate_sysroot','')} \
+                        ${PN}:do_image_${VM_ROOTFS_TYPE} \
+                        "
+
 
 IMAGE_TYPEDEP_vmdk = "${VM_ROOTFS_TYPE}"
 IMAGE_TYPEDEP_vdi = "${VM_ROOTFS_TYPE}"
@@ -45,9 +48,34 @@ do_bootdirectdisk_onepart[depends] += "${@'${INITRD_IMAGE_VM}:do_image_complete'
 
 BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
+CONFIG_PART_BLOCKS ??= "10240"
 
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 DISK_SIGNATURE[vardepsexclude] = "DISK_SIGNATURE_GENERATED"
+
+
+boot_direct_populate() {
+       dest=$1
+       install -d $dest
+
+       # Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
+       install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
+
+       # initrd is made of concatenation of multiple filesystem images
+       if [ -n "${INITRD_LIVE}" ]; then
+               rm -f $dest/initrd
+               for fs in ${INITRD_LIVE}
+               do
+                       if [ -s "${fs}" ]; then
+                               cat ${fs} >> $dest/initrd
+                       else
+                               bbfatal "${fs} is invalid. initrd image creation failed."
+                       fi
+               done
+               chmod 0644 $dest/initrd
+       fi
+       install -m 0644 ${ROOTFS} ${dest}/rootfs.img
+}
 
 build_boot_dd() {
         HDDDIR="${S}/hdd/boot"
@@ -63,6 +91,8 @@ build_boot_dd() {
                 efi_hddimg_populate $HDDDIR
         fi
 
+        boot_direct_populate $HDDDIR
+
         BLOCKS=`du -bks $HDDDIR | cut -f 1`
         BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
 
@@ -74,7 +104,7 @@ build_boot_dd() {
 
         # Remove it since mkdosfs would fail when it exists
         rm -f $HDDIMG
-        mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C $HDDIMG $BLOCKS 
+        mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C $HDDIMG $BLOCKS
         mcopy -i $HDDIMG -s $HDDDIR/* ::/
 
         if [ "${PCBIOS}" = "1" ]; then
@@ -82,33 +112,31 @@ build_boot_dd() {
         fi
         chmod 644 $HDDIMG
 
-        ROOTFSBLOCKS=`du -Lbks ${ROOTFS} | cut -f 1`
-        TOTALSIZE=`expr $BLOCKS + $ROOTFSBLOCKS`
+        TOTALSIZE=`expr $BLOCKS + 1 + ${CONFIG_PART_BLOCKS}`
         END1=`expr $BLOCKS \* 1024`
-        END2=`expr $END1 + 512`
-        END3=`expr \( $ROOTFSBLOCKS \* 1024 \) + $END1`
+        END2=`expr $END1 + 1024`
+        END3=`expr ${CONFIG_PART_BLOCKS} \* 1024 + $END2`
 
-        echo $ROOTFSBLOCKS $TOTALSIZE $END1 $END2 $END3
+        echo $TOTALSIZE $END1 $END2 $END3 ${CONFIGFS_FILE}
         rm -rf $IMAGE
         dd if=/dev/zero of=$IMAGE bs=1024 seek=$TOTALSIZE count=1
 
         parted $IMAGE mklabel msdos
         parted $IMAGE mkpart primary fat16 0 ${END1}B
-        parted $IMAGE unit B mkpart primary ext2 ${END2}B ${END3}B
-        parted $IMAGE set 1 boot on 
+        parted $IMAGE unit B mkpart primary ext4 ${END2}B ${END3}B
+        parted $IMAGE set 1 boot on
 
         parted $IMAGE print
 
         awk "BEGIN { printf \"$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')\" }" | \
                 dd of=$IMAGE bs=1 seek=440 conv=notrunc
 
-        OFFSET=`expr $END2 / 512`
         if [ "${PCBIOS}" = "1" ]; then
                 dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
         fi
 
         dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
-        dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
+        gzip -dc ${CONFIGFS_FILE} | dd of=$IMAGE conv=notrunc seek=`expr $BLOCKS + 1` bs=1024
 
         cd ${DEPLOY_DIR_IMAGE}
         rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect

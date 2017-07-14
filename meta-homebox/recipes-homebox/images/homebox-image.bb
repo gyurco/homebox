@@ -2,6 +2,8 @@ DESCRIPTION = "Homebox"
 
 inherit core-image
 
+DEPENDS += "squashfs-tools-native"
+
 IMAGE_FEATURES += "package-management ssh-server-openssh"
 
 KERNEL_FEATURES += "features/nfsd/nfsd-enable.scc"
@@ -25,7 +27,8 @@ IMAGE_FSTYPES = "squashfs-xz"
 IMAGE_TYPEDEP_vm = "squashfs_xz"
 VM_ROOTFS_TYPE = "squashfs_xz"
 
-ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.squashfs-xz"
+CONFIGFS_FILE = "${FILE_DIRNAME}/configfs.ext4.gz"
+ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.squashfs-xz"
 
 IMAGE_INSTALL = "\
     grub-efi \

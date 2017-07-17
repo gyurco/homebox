@@ -44,6 +44,7 @@ IMAGE_INSTALL = "\
     screen \
     ntp ntp-utils \
     fuse-exfat ntfs-3g-ntfsprogs exfat-utils \
+    e2fsprogs e2fsprogs-mke2fs e2fsprogs-tune2fs e2fsprogs-resize2fs xfsprogs btrfs-tools \
     tftp-hpa tftp-hpa-server \
     smartmontools hdparm sdparm \
     strace ldd lsof iotop iperf3 tcpdump \

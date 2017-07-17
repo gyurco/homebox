@@ -1,6 +1,6 @@
 DESCRIPTION = "Cyrus-imapd"
 LICENSE = "CMU"
-LIC_FILES_CHKSUM = "file://COPYING;md5=b24dd5815bd69137c774dd6b5e5250f4"
+LIC_FILES_CHKSUM = "file://COPYING;md5=012dbb3a606ccc09f32836aa337dc2fb"
 PR="r1"
 
 SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
@@ -10,18 +10,29 @@ SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
    file://cyrus.conf \
    "
 
-DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs"
+DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs icu"
 
-SRC_URI[md5sum] = "b738adfd7b8aa2c4b95b1d10350450ca"
-SRC_URI[sha256sum] = "b38f4fd72825a298ac47426dcd2a50c8437c2947864ba50d79a9a53fe9845c5f"
+SRC_URI[md5sum] = "df4f1dc749381cc4605f7100fc75ec07"
+SRC_URI[sha256sum] = "5612f3cfa0504eb50bc3e49a77bf04a31c1aff3096fa1bbddb26cd7dbb69d94d"
 
 inherit autotools-brokensep pkgconfig useradd systemd
 
-EXTRA_OECONF="--enable-gssapi=no --enable-replication --enable-murder --enable-idled --with-cyrus-prefix=${sbindir} --with-service-path=${sbindir} --without-perl"
+EXTRA_OECONF="--enable-gssapi=no \
+              --enable-replication \
+              --enable-murder \
+              --enable-idled \
+              --enable-autocreate \
+              --with-mmap=shared \
+              --without-perl \
+              --bindir=${bindir} \
+              --sbindir=${sbindir} \
+              --libexecdir=${libdir}/${BPN} \
+              --sysconfdir=${sysconfdir} \
+             "
 
 do_install_append() {
-    install -d ${D}${nonarch_base_libdir}/systemd/system
-    install -m 0644 ${WORKDIR}/cyrus-imapd.service ${D}${nonarch_base_libdir}/systemd/system
+    install -d ${D}${systemd_unitdir}/system
+    sed 's|%LIBEXECDIR%|${libdir}/${BPN}|' ${WORKDIR}/cyrus-imapd.service > ${D}${systemd_unitdir}/system/cyrus-imapd.service
 
     install -d ${D}${sysconfdir}/default
     echo 'CYRUSOPTIONS=""' > ${D}${sysconfdir}/default/cyrus-imapd

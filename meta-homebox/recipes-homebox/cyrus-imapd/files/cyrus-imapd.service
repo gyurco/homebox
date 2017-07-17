@@ -5,7 +5,7 @@ After=local-fs.target network.target
 [Service]
 Type=simple
 EnvironmentFile=/etc/default/cyrus-imapd
-ExecStart=/usr/sbin/master $CYRUSOPTIONS
+ExecStart=%LIBEXECDIR%/master $CYRUSOPTIONS
 PrivateTmp=true
 
 [Install]

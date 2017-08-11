@@ -33,6 +33,7 @@ ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.squashfs-xz"
 IMAGE_INSTALL = "\
     grub-efi \
     apache2 php-cli php-fpm php-fpm-apache2 \
+    v86d \
     squid \
     nginx \
     mdadm \

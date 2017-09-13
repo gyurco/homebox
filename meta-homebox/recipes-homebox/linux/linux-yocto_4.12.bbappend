@@ -1,7 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 KERNEL_FEATURES += "features/nfsd/nfsd-enable.scc"
-KERNEL_FEATURES += "features/grsec/grsec.scc"
 
 COMPATIBLE_MACHINE_genericx86-64 = "genericx86-64"
 KBRANCH_genericx86-64  = "standard/base"

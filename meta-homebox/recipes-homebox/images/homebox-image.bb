@@ -6,9 +6,6 @@ DEPENDS += "squashfs-tools-native"
 
 IMAGE_FEATURES += "package-management ssh-server-openssh"
 
-KERNEL_FEATURES += "features/nfsd/nfsd-enable.scc"
-KERNEL_FEATURES += "features/grsec/grsec.scc"
-
 AUTO_SYSLINUXCFG = "1"
 INITRD_IMAGE_VM ?= "core-image-minimal-initramfs"
 SYSLINUX_ROOT = "root=/dev/ram0"

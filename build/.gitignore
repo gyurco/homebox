@@ -1,4 +1,5 @@
 bitbake.lock
+*.log
 cache/
 conf/sanity_info
 downloads/

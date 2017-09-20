@@ -33,6 +33,7 @@ IMAGE_INSTALL = "\
     v86d \
     squid \
     nginx \
+    mariadb-server postgresql \
     mdadm \
     rpm \
     acpid dmidecode usbutils \

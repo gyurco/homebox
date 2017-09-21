@@ -12,10 +12,6 @@ SYSLINUX_ROOT = "root=/dev/ram0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
 
-do_bootimg[depends] = "${PN}:do_image_squashfs_xz"
-do_bootdirectdisk_onepart[depends] += "${PN}:do_image_squashfs_xz"
-do_bootdirectdisk_onepart[depends] += "${MLPREFIX}grub-efi:do_deploy"
-
 inherit boot-directdisk-onepart
 #If no need for a partitioned diskimage:
 #inherit image-vm
@@ -23,9 +19,28 @@ inherit boot-directdisk-onepart
 IMAGE_FSTYPES = "squashfs-xz"
 IMAGE_TYPEDEP_vm = "squashfs_xz"
 VM_ROOTFS_TYPE = "squashfs_xz"
+LIVE_ROOTFS_TYPE = "squashfs_xz"
 
 CONFIGFS_FILE = "${FILE_DIRNAME}/configfs.ext4.gz"
 ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.squashfs-xz"
+
+ROOTFS_POSTPROCESS_COMMAND += " disable_autostarts; "
+
+disable_autostarts () {
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/cyrus-imapd.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/libvirtd.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/libvirt-guests.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/minidlna.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/nfs-mountd.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/nfs-server.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/nfs-statd.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/nginx.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/nmb.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/smb.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/openvswitch.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/strongswan.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/transmission-daemon.service;
+}
 
 IMAGE_INSTALL = "\
     grub-efi \

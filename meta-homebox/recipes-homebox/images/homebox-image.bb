@@ -11,6 +11,7 @@ INITRD_IMAGE_VM ?= "core-image-minimal-initramfs"
 SYSLINUX_ROOT = "root=/dev/ram0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
+BOOTDD_EXTRA_SPACE = "262144"
 
 inherit boot-directdisk-onepart
 #If no need for a partitioned diskimage:

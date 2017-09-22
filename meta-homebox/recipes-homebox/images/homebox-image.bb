@@ -25,7 +25,7 @@ LIVE_ROOTFS_TYPE = "squashfs_xz"
 CONFIGFS_FILE = "${FILE_DIRNAME}/configfs.ext4.gz"
 ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.squashfs-xz"
 
-ROOTFS_POSTPROCESS_COMMAND += " disable_autostarts; "
+ROOTFS_POSTPROCESS_COMMAND += " disable_autostarts; default_network; "
 
 disable_autostarts () {
     rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/cyrus-imapd.service;
@@ -41,6 +41,12 @@ disable_autostarts () {
     rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/openvswitch.service;
     rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/strongswan.service;
     rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/transmission-daemon.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/multi-user.target.wants/xinetd.service;
+    rm -f ${IMAGE_ROOTFS}/etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service;
+}
+
+default_network () {
+    echo "[Match]\nName=*\n\n[Network]\nDHCP=ipv4\n" > ${IMAGE_ROOTFS}/etc/systemd/network/01-default.network
 }
 
 IMAGE_INSTALL = "\

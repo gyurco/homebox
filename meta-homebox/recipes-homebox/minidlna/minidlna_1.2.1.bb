@@ -1,4 +1,4 @@
-SRCREV = "v1_2_0"
+SRCREV = "v1_2_1"
 LIC_FILES_CHKSUM = "file://LICENCE.miniupnpd;md5=b0dabf9d8e0f871554e309d62ead8d2b"
 
 DESCRIPTION = "MiniDLNA (aka ReadyDLNA) is server software with the aim of \

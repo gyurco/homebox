@@ -22,6 +22,8 @@ EXTRA_OECONF="--enable-gssapi=no \
               --enable-murder \
               --enable-idled \
               --enable-autocreate \
+              --with-cyrus-user=cyrus-imap \
+              --with-cyrus-group=cyrus-imap \
               --with-mmap=shared \
               --without-perl \
               --bindir=${bindir} \
@@ -50,12 +52,12 @@ do_install() {
 SYSTEMD_SERVICE_${PN} = "cyrus-imapd.service"
 
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "--system cyrus"
+GROUPADD_PARAM_${PN} = "--system cyrus-imap"
 USERADD_PARAM_${PN} = "--home ${localstatedir}/lib/imap --create-home \
-                       --gid cyrus \
+                       --gid cyrus-imap \
                        --shell ${base_bindir}/false \
                        --system \
-                       cyrus"
+                       cyrus-imap"
 
 #FILES_${PN}-doc += "/usr/man"
 

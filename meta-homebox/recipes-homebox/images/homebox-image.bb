@@ -60,7 +60,7 @@ IMAGE_INSTALL = "\
     rpm \
     acpid dmidecode usbutils \
     ffmpeg minidlna transmission transmission-client mpd alsa-utils \
-    samba \
+    samba samba-ad-dc winbind krb5-user python-unixadmin python-difflib python-threading \
     curl xz \
     screen \
     ntp ntp-utils \

@@ -86,7 +86,7 @@ IMAGE_INSTALL = "\
     openldap-backend-monitor openldap-backend-null openldap-backend-passwd \
     qemu libvirt libvirt-libvirtd libvirt-virsh \
     openvswitch-switch openvswitch-pki \
-    kernel-modules linux-firmware \
+    kernel-modules \
     packagegroup-core-boot \
     packagegroup-core-full-cmdline \
     ${CORE_IMAGE_EXTRA_INSTALL} \

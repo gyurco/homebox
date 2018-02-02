@@ -45,6 +45,12 @@ cyrus-imap:x:53:
 games:x:60:
 shutdown:x:70:
 users:x:100:
+mosquitto:x:942:
+nm-openvpn:x:946:
+radiusd:x:947:
+xuser:x:948:
+builder:x:949:
+_apt:x:951:
 bind:x:953:
 avahi:x:954:
 avahi-autoipd:x:955:

@@ -84,7 +84,7 @@ IMAGE_INSTALL = "\
     openldap-bin openldap-slapd openldap-overlay-proxycache openldap-dev \
     openldap-backend-dnssrv openldap-backend-ldap openldap-backend-meta \
     openldap-backend-monitor openldap-backend-null openldap-backend-passwd \
-    qemu libvirt libvirt-libvirtd libvirt-virsh \
+    qemu libvirt libvirt-libvirtd libvirt-virsh lxc \
     openvswitch-switch openvswitch-pki \
     kernel-modules \
     packagegroup-core-boot \

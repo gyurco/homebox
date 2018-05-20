@@ -6,7 +6,6 @@ KERNEL_FEATURES += "features/net_sched/net_sched.scc"
 KERNEL_FEATURES += "features/overlayfs/overlayfs.scc"
 KERNEL_FEATURES += "features/bluetooth/bluetooth.scc"
 KERNEL_FEATURES += "features/bluetooth/bluetooth-usb.scc"
-KERNEL_FEATURES += "features/kvm/qemu-kvm-enable.scc"
 
 COMPATIBLE_MACHINE_genericx86-64 = "genericx86-64"
 KBRANCH_genericx86-64  = "standard/base"

@@ -12,8 +12,8 @@ SRC_URI = "http://www.cyrusimap.org/releases/${BPN}-${PV}.tar.gz \
 
 DEPENDS = "openssl cyrus-sasl util-linux jansson db zlib pcre net-snmp tcp-wrappers e2fsprogs icu"
 
-SRC_URI[md5sum] = "c5d30b3dc91bc3949be9f43e1c5438fb"
-SRC_URI[sha256sum] = "ed17b4321bbe54df2c9b8832e189f52de4561f51e199f7c620216e79910c73a0"
+SRC_URI[md5sum] = "354703ef5ded93c9b19b3f3d2308c950"
+SRC_URI[sha256sum] = "ae5fe3f33f75ef2d3964ea38ae7e01207da8050a71a21dea30c4f8d4bd159ad1"
 
 inherit autotools-brokensep pkgconfig useradd systemd
 

@@ -9,8 +9,8 @@ SRC_URI = "https://github.com/transmission/transmission-releases/raw/master/${BP
 
 DEPENDS = "libevent openssl curl libtool intltool-native"
 
-SRC_URI[md5sum] = "a1b8113ebc3402787312ecb443d9d3c1"
-SRC_URI[sha256sum] = "8815920e0a4499bcdadbbe89a4115092dab42ce5199f71ff9a926cfd12b9b90b"
+SRC_URI[md5sum] = "c92829294edfa391c046407eeb16358a"
+SRC_URI[sha256sum] = "35442cc849f91f8df982c3d0d479d650c6ca19310a994eccdaa79a4af3916b7d"
 
 inherit autotools-brokensep gettext useradd systemd
 

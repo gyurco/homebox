@@ -20,12 +20,12 @@ inherit autotools-brokensep gettext useradd systemd
 
 # Configure aborts with:
 # config.status: error: po/Makefile.in.in was not created by intltoolize.
-do_configure_prepend() {
+do:configure:prepend() {
     sed -i /AM_GLIB_GNU_GETTEXT/d ${S}/configure.ac
     cd ${S} && intltoolize --copy --force --automake
 }
 
-do_install_append() {
+do:install:append() {
     install -d ${D}${nonarch_base_libdir}/systemd/system
     install -m 0644 ${WORKDIR}/transmission-daemon.service ${D}${nonarch_base_libdir}/systemd/system
 
@@ -56,8 +56,8 @@ FILES_${PN} = "\
     ${sysconfdir}"
 
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "--system transmission"
-USERADD_PARAM_${PN} = "--home ${localstatedir}/lib/transmission-daemon --create-home \
+GROUPADD_PARAM:${PN} = "--system transmission"
+USERADD_PARAM:${PN} = "--home ${localstatedir}/lib/transmission-daemon --create-home \
                        --gid transmission \
                        --shell ${base_bindir}/false \
                        --system \

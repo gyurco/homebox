@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 KERNEL_FEATURES += "features/nfsd/nfsd-enable.scc"
 KERNEL_FEATURES += "features/netfilter/netfilter.scc"

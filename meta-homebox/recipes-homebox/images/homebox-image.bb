@@ -7,7 +7,7 @@ DEPENDS += "squashfs-tools-native"
 IMAGE_FEATURES += "package-management ssh-server-openssh"
 
 AUTO_SYSLINUXCFG = "1"
-INITRAMFS_SCRIPTS_append = "initramfs-live-boot"
+INITRAMFS_SCRIPTS:append = "initramfs-live-boot"
 INITRD_IMAGE_VM ?= "core-image-homebox-initramfs"
 SYSLINUX_ROOT = "root=/dev/ram0"
 SYSLINUX_TIMEOUT ?= "10"
@@ -61,7 +61,7 @@ IMAGE_INSTALL = "\
     rpm \
     acpid dmidecode usbutils \
     ffmpeg minidlna transmission transmission-client mpd alsa-utils \
-    samba samba-ad-dc winbind krb5-user python-unixadmin python-difflib python-threading \
+    samba samba-ad-dc winbind krb5-user python3-unixadmin python3-difflib python3-threading \
     curl xz \
     screen \
     ntp ntp-utils \
@@ -78,13 +78,12 @@ IMAGE_INSTALL = "\
     ebtables bridge-utils cifs-utils vlan inetutils \
     cryptsetup \
     cyrus-sasl-bin \
-    lio-utils \
-    python-json \
+    python3-json \
     postfix cyrus-imapd \
     bluez5 bluez5-noinst-tools bluez5-obex \
     openldap-bin openldap-slapd openldap-overlay-proxycache openldap-dev \
     openldap-backend-dnssrv openldap-backend-ldap openldap-backend-meta \
-    openldap-backend-monitor openldap-backend-null openldap-backend-passwd \
+    openldap-backend-null openldap-backend-passwd \
     qemu libvirt libvirt-libvirtd libvirt-virsh lxc \
     openvswitch-switch openvswitch-pki \
     kernel-modules \

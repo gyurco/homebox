@@ -21,11 +21,11 @@ S = "${WORKDIR}/git"
 # configure.ac:30: error: required file './ABOUT-NLS' not found
 EXTRA_AUTORECONF = ""
 
-do_configure_prepend() {
+do:configure:prepend() {
     sed -i 's/0.18/0.19/' configure.ac
 }
 
-do_install_append(){
+do:install:append(){
     install -d ${D}${sysconfdir}
     install -m 0755 minidlna.conf ${D}${sysconfdir}
 
@@ -38,7 +38,7 @@ do_install_append(){
     install -m 0755 ${WORKDIR}/minidlna-daemon.init.d ${D}${sysconfdir}/init.d/minidlna
 }
 
-SYSTEMD_SERVICE_${PN} = "minidlna.service"
+SYSTEMD_SERVICE:${PN} = "minidlna.service"
 
 INITSCRIPT_NAME = "minidlna"
 INITSCRIPT_PARAMS = "defaults 90"
